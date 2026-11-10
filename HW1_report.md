@@ -22,19 +22,13 @@ The metric is validation bits per byte (bpb), where lower is better. For charact
 
 ## 1. Metrics by hand
 
-For a model with validation loss \(L\) in nats/token:
+For a model with validation loss `L` in nats/token:
 
-\[
-\text{perplexity}=e^L,
-\qquad
-\text{bits/token}=L/\ln 2,
-\]
-
-and
-
-\[
-\text{bpb}=\frac{L}{\ln 2}\times\frac{N_{tokens}}{N_{bytes}}.
-\]
+```text
+perplexity = exp(L)
+bits/token = L / ln(2)
+bits/byte = bits/token × (validation tokens / validation bytes)
+```
 
 For the trained character smoke run, the values were:
 

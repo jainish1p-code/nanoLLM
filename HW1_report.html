@@ -282,10 +282,10 @@ bits/token and bpb are equal. Each run saved its configuration,
 metadata, logs, metrics, and checkpoint; checkpoints are not included in
 the submitted artifact.</p>
 <h2 id="metrics-by-hand">1. Metrics by hand</h2>
-<p>For a model with validation loss (L) in nats/token:</p>
-<p>[ =e^L, =L/, ]</p>
-<p>and</p>
-<p>[ =. ]</p>
+<p>For a model with validation loss <code>L</code> in nats/token:</p>
+<pre class="text"><code>perplexity = exp(L)
+bits/token = L / ln(2)
+bits/byte = bits/token × (validation tokens / validation bytes)</code></pre>
 <p>For the trained character smoke run, the values were:</p>
 <table>
 <thead>
@@ -570,11 +570,11 @@ All conclusions are limited to Tiny Shakespeare, the selected model
 sizes, the training recipe, and the fixed compute budget.</p>
 <h2 id="reproducibility">Reproducibility</h2>
 <p>The main commands were:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest nanolm/tests <span class="at">-q</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.train <span class="at">-c</span> nanolm/configs/00_smoke.yaml</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.sweep <span class="at">--sweep</span> nanolm/configs/sweeps/01_char_models.yaml <span class="at">--set</span> train.compile=false</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.analyze outputs/nanolm/sweeps/char_models <span class="at">--baseline</span> gpt_textbook <span class="at">--metric</span> val_bpb</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.viz attention <span class="at">--run</span> <span class="op">&lt;</span>run<span class="op">&gt;</span> --text <span class="st">&quot;...&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest nanolm/tests <span class="at">-q</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.train <span class="at">-c</span> nanolm/configs/00_smoke.yaml</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.sweep <span class="at">--sweep</span> nanolm/configs/sweeps/01_char_models.yaml <span class="at">--set</span> train.compile=false</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.analyze outputs/nanolm/sweeps/char_models <span class="at">--baseline</span> gpt_textbook <span class="at">--metric</span> val_bpb</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.viz attention <span class="at">--run</span> <span class="op">&lt;</span>run<span class="op">&gt;</span> --text <span class="st">&quot;...&quot;</span></span></code></pre></div>
 <p>The architecture sweep used seeds 1337 and 42. Context runs used
 sequence lengths 64, 128, 256, and 512 with a fixed 16.384M-token
 budget. The code, configurations, logs, metrics, CSV files, and figures
