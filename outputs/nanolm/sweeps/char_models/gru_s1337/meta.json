@@ -1,0 +1,20 @@
+{
+ "name": "gru",
+ "seed": 1337,
+ "date": "2026-11-10T05:32:02",
+ "git": {
+  "commit": null,
+  "branch": null,
+  "dirty": null
+ },
+ "host": "nanollm",
+ "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+ "python": "3.12.3",
+ "torch": "2.15.0+cu132",
+ "device": "cuda (precision=bfloat16, compile=yes)",
+ "world_size": 1,
+ "command": "/home/exouser/LLM/nanolm/train.py --config /home/exouser/LLM/nanolm/configs/02_char_transformer.yaml train.max_steps=2000 train.seq_len=256 train.batch_size=32 model.arch=\"gru\" model.n_layers=2 model.dim=256 train.lr=\"2e-3\" train.weight_decay=0.0 train.compile=false name=gru seed=1337 run_dir=/home/exouser/LLM/outputs/nanolm/sweeps/char_models/gru_s1337 tags=[\"char_models\"]",
+ "tags": [
+  "char_models"
+ ]
+}

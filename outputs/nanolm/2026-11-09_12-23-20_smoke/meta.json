@@ -1,0 +1,18 @@
+{
+ "name": "smoke",
+ "seed": 1337,
+ "date": "2026-11-09T12:23:20",
+ "git": {
+  "commit": "c77918d4db7d2aefe9cad18e20f932962b1fabc7",
+  "branch": "master",
+  "dirty": true
+ },
+ "host": "RSPmac-3.local",
+ "platform": "macOS-26.7.1-arm64-arm-64bit",
+ "python": "3.11.5",
+ "torch": "2.15.0",
+ "device": "mps (precision=fp32, compile=no)",
+ "world_size": 1,
+ "command": "/Users/jainishpatel/projects/LLM/nanolm/train.py -c nanolm/configs/00_smoke.yaml",
+ "tags": []
+}

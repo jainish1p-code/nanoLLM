@@ -1,0 +1,70 @@
+[run] /home/exouser/LLM/outputs/nanolm/sweeps/char_models/gpt_textbook_s42
+[run] device: cuda (precision=bfloat16, compile=yes) | world_size=1
+[data] tinyshakespeare_char_tail100 | tokenizer=char vocab=65 | train 1,003,854 tok | val 111,540 tok
+[model] gpt: 3,438,336 params (3,159,552 non-embedding)
+[train] 2000 steps x 8,192 tokens/step (16.32 passes over train) | optimizer=adamw schedule=cosine
+step     50 | loss 3.0546 | lr 5.00e-04 | 367.9k tok/s | 1s
+step    100 | loss 2.5215 | lr 1.00e-03 | 631.5k tok/s | 2s
+step    150 | loss 2.4672 | lr 9.88e-04 | 586.2k tok/s | 2s
+step    200 | loss 2.4340 | lr 9.78e-04 | 582.9k tok/s | 3s
+step    250 | loss 2.3819 | lr 9.66e-04 | 586.2k tok/s | 4s
+  eval step    250 | val_loss 2.3379 | val_bpb 3.3729 | acc 31.3% | 4s
+step    300 | loss 2.2931 | lr 9.51e-04 | 584.1k tok/s | 5s
+step    350 | loss 2.1970 | lr 9.34e-04 | 583.8k tok/s | 5s
+step    400 | loss 2.0918 | lr 9.14e-04 | 588.8k tok/s | 6s
+step    450 | loss 1.9908 | lr 8.93e-04 | 584.7k tok/s | 7s
+step    500 | loss 1.9184 | lr 8.69e-04 | 585.4k tok/s | 7s
+  eval step    500 | val_loss 1.9412 | val_bpb 2.8006 | acc 42.4% | 7s
+step    550 | loss 1.8537 | lr 8.43e-04 | 587.3k tok/s | 8s
+step    600 | loss 1.7896 | lr 8.15e-04 | 586.0k tok/s | 9s
+step    650 | loss 1.7482 | lr 7.86e-04 | 587.5k tok/s | 9s
+step    700 | loss 1.7038 | lr 7.55e-04 | 592.8k tok/s | 10s
+step    750 | loss 1.6695 | lr 7.23e-04 | 589.8k tok/s | 11s
+  eval step    750 | val_loss 1.7644 | val_bpb 2.5455 | acc 47.5% | 11s
+step    800 | loss 1.6353 | lr 6.90e-04 | 595.1k tok/s | 12s
+step    850 | loss 1.6041 | lr 6.56e-04 | 584.8k tok/s | 12s
+step    900 | loss 1.5846 | lr 6.21e-04 | 585.0k tok/s | 13s
+step    950 | loss 1.5635 | lr 5.86e-04 | 583.8k tok/s | 14s
+step   1000 | loss 1.5479 | lr 5.51e-04 | 587.8k tok/s | 14s
+  eval step   1000 | val_loss 1.6618 | val_bpb 2.3975 | acc 50.4% | 14s
+step   1050 | loss 1.5112 | lr 5.15e-04 | 600.4k tok/s | 15s
+step   1100 | loss 1.5073 | lr 4.80e-04 | 596.8k tok/s | 16s
+step   1150 | loss 1.4906 | lr 4.46e-04 | 596.5k tok/s | 16s
+step   1200 | loss 1.4806 | lr 4.12e-04 | 596.8k tok/s | 17s
+step   1250 | loss 1.4585 | lr 3.78e-04 | 665.7k tok/s | 18s
+  eval step   1250 | val_loss 1.5973 | val_bpb 2.3045 | acc 52.4% | 18s
+step   1300 | loss 1.4506 | lr 3.46e-04 | 678.9k tok/s | 18s
+step   1350 | loss 1.4448 | lr 3.15e-04 | 681.5k tok/s | 19s
+step   1400 | loss 1.4282 | lr 2.86e-04 | 680.6k tok/s | 19s
+step   1450 | loss 1.4186 | lr 2.58e-04 | 684.2k tok/s | 20s
+step   1500 | loss 1.4132 | lr 2.32e-04 | 682.3k tok/s | 21s
+  eval step   1500 | val_loss 1.5566 | val_bpb 2.2456 | acc 53.9% | 21s
+step   1550 | loss 1.4021 | lr 2.08e-04 | 681.2k tok/s | 21s
+step   1600 | loss 1.3977 | lr 1.86e-04 | 681.4k tok/s | 22s
+step   1650 | loss 1.3889 | lr 1.67e-04 | 681.1k tok/s | 22s
+step   1700 | loss 1.3775 | lr 1.49e-04 | 681.8k tok/s | 23s
+step   1750 | loss 1.3750 | lr 1.35e-04 | 682.3k tok/s | 24s
+  eval step   1750 | val_loss 1.5369 | val_bpb 2.2173 | acc 54.3% | 24s
+step   1800 | loss 1.3715 | lr 1.22e-04 | 682.6k tok/s | 24s
+step   1850 | loss 1.3658 | lr 1.13e-04 | 682.7k tok/s | 25s
+step   1900 | loss 1.3646 | lr 1.06e-04 | 683.7k tok/s | 25s
+step   1950 | loss 1.3586 | lr 1.01e-04 | 683.6k tok/s | 26s
+step   2000 | loss 1.3619 | lr 1.00e-04 | 682.1k tok/s | 27s
+  eval step   2000 | val_loss 1.5202 | val_bpb 2.1932 | acc 54.9% | 27s
+[final] val_loss 1.5202 | val_bpb 2.1932 | ppl 4.57 | acc 54.92% | 111,360 tokens, 1.00 bytes/token
+[sample]
+
+
+KING LEWIS XI:
+No, more come a stone and body.
+
+HENRY BOLINGBROKE:
+What dreams the man's plant heart,
+For their cereign fames, meaning left flesh,
+Be hear him no see breath his life? but unhappin'd master'd
+As death, there's bound, that we are no more fair
+Upon with courtil but of your book and man's doth and weep'd
+He sentence by the cleasure of the first states of ride;
+And yet he will from the
+
+[done] metrics -> /home/exouser/LLM/outputs/nanolm/sweeps/char_models/gpt_textbook_s42/metrics.json
