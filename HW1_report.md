@@ -4,6 +4,8 @@
 
 This report studies character-level language models trained on Tiny Shakespeare. The experiments compare a vanilla RNN, GRU, LSTM, a larger LSTM, a textbook Transformer, and a modern Transformer. They also test context length and inspect attention patterns.
 
+Supporting code, configurations, metrics, and figures: [github.com/jainish1p-code/nanoLLM](https://github.com/jainish1p-code/nanoLLM).
+
 The main results are:
 
 - The vanilla RNN performs worst at 2.4384 validation bits per byte (bpb).
