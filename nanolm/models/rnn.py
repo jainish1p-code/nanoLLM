@@ -42,6 +42,41 @@ class LSTMScratch(nn.Module):
         return torch.stack(outs, dim=1)
 
 
+class GRUScratch(nn.Module):
+    """A single-layer GRU written out gate by gate.
+
+    The gate order matches ``torch.nn.GRU``: reset, update, and new.
+
+        r = sigmoid(W_ir x + b_ir + W_hr h + b_hr)
+        z = sigmoid(W_iz x + b_iz + W_hz h + b_hz)
+        n = tanh(W_in x + b_in + r * (W_hn h + b_hn))
+        h' = (1 - z) * n + z * h
+
+    Writing the cell explicitly makes the reset gate's effect on the candidate
+    state visible and lets us verify it numerically against ``nn.GRU``.
+    """
+
+    def __init__(self, in_dim: int, hidden: int):
+        super().__init__()
+        self.hidden = hidden
+        self.W_ih = nn.Linear(in_dim, 3 * hidden)
+        self.W_hh = nn.Linear(hidden, 3 * hidden)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:  # x [B, T, D]
+        B, T, _ = x.shape
+        h = x.new_zeros(B, self.hidden)
+        outs = []
+        for t in range(T):
+            i_r, i_z, i_n = self.W_ih(x[:, t]).chunk(3, dim=-1)
+            h_r, h_z, h_n = self.W_hh(h).chunk(3, dim=-1)
+            r = torch.sigmoid(i_r + h_r)
+            z = torch.sigmoid(i_z + h_z)
+            n = torch.tanh(i_n + r * h_n)
+            h = (1.0 - z) * n + z * h
+            outs.append(h)
+        return torch.stack(outs, dim=1)
+
+
 class RecurrentLM(nn.Module):
     def __init__(self, cfg):
         super().__init__()

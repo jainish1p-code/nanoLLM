@@ -126,6 +126,25 @@ Layer 3, head 3 assigns 32.1% average attention to the first character of the cu
 
 These heads can help the model spell the remainder of a word after its first character. The values are averages over the selected short texts, so they support an interpretation of the heads but do not prove that the heads have only one function.
 
+## Extra credit: GRU cell verification
+
+I implemented `GRUScratch` in `nanolm/models/rnn.py` gate by gate. Its equations use the same reset (`r`), update (`z`), and candidate (`n`) gate order as `torch.nn.GRU`:
+
+```text
+r = sigmoid(input_reset + hidden_reset)
+z = sigmoid(input_update + hidden_update)
+n = tanh(input_new + r × hidden_new)
+h_next = (1 - z) × n + z × h_previous
+```
+
+For verification, I created a PyTorch `nn.GRU` and a `GRUScratch` cell with the same input size and hidden size. I copied all four reference weight and bias tensors into the scratch implementation, evaluated both on the same random input sequence, and compared every output element. The test passed with tolerance `1e-6`:
+
+```text
+29 passed, 3 skipped
+```
+
+This confirms that the explicit gate-by-gate implementation matches PyTorch's single-layer GRU for the tested configuration.
+
 ## Conclusions
 
 The experiments show three practical differences between recurrent and attention-based language models. First, the vanilla RNN has difficulty carrying useful information through long character sequences, while gates in GRU and LSTM improve optimization and memory. Second, more parameters can hurt when the training corpus and token budget are fixed: the larger LSTM is worse than the smaller one. Third, the modern Transformer makes better use of longer context than the LSTM in this setup, improving through 256 characters rather than peaking at 128.

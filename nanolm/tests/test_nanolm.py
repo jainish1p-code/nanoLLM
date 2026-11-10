@@ -19,6 +19,7 @@ from nanolm.evaluate import evaluate
 from nanolm.models import build_model
 from nanolm.optim import zeropower_via_newtonschulz5, lr_multiplier
 from nanolm.quant import export_artifact
+from nanolm.models.rnn import GRUScratch
 
 GOLF_FEATURES = {
     "plain": {},
@@ -72,6 +73,24 @@ def test_recurrent_shapes_and_causality(arch):
         a, b = m(x), m(x2)
     assert a.shape == (3, 12, 50)
     assert torch.allclose(a[:, :8], b[:, :8], atol=1e-5)
+
+
+def test_gru_scratch_matches_torch_gru():
+    """The gate-by-gate GRU must match PyTorch when given identical weights."""
+    torch.manual_seed(0)
+    in_dim, hidden = 7, 11
+    reference = torch.nn.GRU(in_dim, hidden, batch_first=True)
+    scratch = GRUScratch(in_dim, hidden)
+    with torch.no_grad():
+        scratch.W_ih.weight.copy_(reference.weight_ih_l0)
+        scratch.W_ih.bias.copy_(reference.bias_ih_l0)
+        scratch.W_hh.weight.copy_(reference.weight_hh_l0)
+        scratch.W_hh.bias.copy_(reference.bias_hh_l0)
+
+    x = torch.randn(3, 13, in_dim)
+    expected, _ = reference(x)
+    actual = scratch(x)
+    assert torch.allclose(actual, expected, atol=1e-6, rtol=1e-6)
 
 
 def test_gqa_matches_shapes_and_params():

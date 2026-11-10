@@ -553,6 +553,25 @@ assigns 32.4%, while layer 2, head 2 assigns 32.8%.</p>
 its first character. The values are averages over the selected short
 texts, so they support an interpretation of the heads but do not prove
 that the heads have only one function.</p>
+<h2 id="extra-credit-gru-cell-verification">Extra credit: GRU cell
+verification</h2>
+<p>I implemented <code>GRUScratch</code> in
+<code>nanolm/models/rnn.py</code> gate by gate. Its equations use the
+same reset (<code>r</code>), update (<code>z</code>), and candidate
+(<code>n</code>) gate order as <code>torch.nn.GRU</code>:</p>
+<pre class="text"><code>r = sigmoid(input_reset + hidden_reset)
+z = sigmoid(input_update + hidden_update)
+n = tanh(input_new + r × hidden_new)
+h_next = (1 - z) × n + z × h_previous</code></pre>
+<p>For verification, I created a PyTorch <code>nn.GRU</code> and a
+<code>GRUScratch</code> cell with the same input size and hidden size. I
+copied all four reference weight and bias tensors into the scratch
+implementation, evaluated both on the same random input sequence, and
+compared every output element. The test passed with tolerance
+<code>1e-6</code>:</p>
+<pre class="text"><code>29 passed, 3 skipped</code></pre>
+<p>This confirms that the explicit gate-by-gate implementation matches
+PyTorch’s single-layer GRU for the tested configuration.</p>
 <h2 id="conclusions">Conclusions</h2>
 <p>The experiments show three practical differences between recurrent
 and attention-based language models. First, the vanilla RNN has
@@ -570,11 +589,11 @@ All conclusions are limited to Tiny Shakespeare, the selected model
 sizes, the training recipe, and the fixed compute budget.</p>
 <h2 id="reproducibility">Reproducibility</h2>
 <p>The main commands were:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest nanolm/tests <span class="at">-q</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.train <span class="at">-c</span> nanolm/configs/00_smoke.yaml</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.sweep <span class="at">--sweep</span> nanolm/configs/sweeps/01_char_models.yaml <span class="at">--set</span> train.compile=false</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.analyze outputs/nanolm/sweeps/char_models <span class="at">--baseline</span> gpt_textbook <span class="at">--metric</span> val_bpb</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.viz attention <span class="at">--run</span> <span class="op">&lt;</span>run<span class="op">&gt;</span> --text <span class="st">&quot;...&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pytest nanolm/tests <span class="at">-q</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.train <span class="at">-c</span> nanolm/configs/00_smoke.yaml</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.sweep <span class="at">--sweep</span> nanolm/configs/sweeps/01_char_models.yaml <span class="at">--set</span> train.compile=false</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.analyze outputs/nanolm/sweeps/char_models <span class="at">--baseline</span> gpt_textbook <span class="at">--metric</span> val_bpb</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> nanolm.viz attention <span class="at">--run</span> <span class="op">&lt;</span>run<span class="op">&gt;</span> --text <span class="st">&quot;...&quot;</span></span></code></pre></div>
 <p>The architecture sweep used seeds 1337 and 42. Context runs used
 sequence lengths 64, 128, 256, and 512 with a fixed 16.384M-token
 budget. The code, configurations, logs, metrics, CSV files, and figures
